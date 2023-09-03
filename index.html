@@ -12,6 +12,7 @@
 <body>
     <canvas id="sensorCanvas"></canvas>
     <button id="startButton">Start</button>
+    <div id="sensorData"></div>
 
     <script>
         // Get the canvas element
@@ -86,8 +87,8 @@
                 prevBeta = roundedBeta;
                 hasProperSeating = false;
             }
-            
-            // Send the beta value to the server
+
+            // Send the beta value to the server and update the HTML content
             sendSensorDataToServer(roundedBeta);
         }
 
@@ -106,13 +107,20 @@
             updateCanvas(beta);
         });
 
-        // Function to send sensor data to the server
+        // Function to send sensor data to the server and update HTML content
         function sendSensorDataToServer(beta) {
             const xhr = new XMLHttpRequest();
-            const url = 'http://192.168.0.12:3000'; // Replace with your laptop's IP and server port
+            const url = 'http://YOUR_LAPTOP_IP:YOUR_SERVER_PORT/sensor-data'; // Replace with your laptop's IP and server port
             xhr.open('POST', url, true);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify({ betaValue: beta }));
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const sensorDataDiv = document.getElementById("sensorData");
+                    sensorDataDiv.innerHTML = xhr.responseText;
+                }
+            };
         }
     </script>
 </body>
