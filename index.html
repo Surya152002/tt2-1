@@ -88,7 +88,7 @@
                 hasProperSeating = false;
             }
 
-            // Send the beta value to the server and update the HTML content
+            // Send the roundedBeta value to the server
             sendSensorDataToServer(roundedBeta);
         }
 
@@ -107,13 +107,26 @@
             updateCanvas(beta);
         });
 
-        // Function to send sensor data to the server and update HTML content
+        // Function to send sensor data to the server
         function sendSensorDataToServer(beta) {
+            // Replace 'YOUR_SERVER_IP' and 'YOUR_SERVER_PORT' with the destination device's IP address and port.
+            const serverAddress = 'http://192.168.0.12:3000';
+            
+            // Create a new XMLHttpRequest
             const xhr = new XMLHttpRequest();
-            const url = 'http://YOUR_LAPTOP_IP:YOUR_SERVER_PORT/sensor-data'; // Replace with your laptop's IP and server port
+            
+            // Define the URL for sending data
+            const url = `${serverAddress}/sensor-data`;
+            
             xhr.open('POST', url, true);
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({ betaValue: beta }));
+            
+            // Create an object with the data to send
+            const dataToSend = {
+                betaValue: beta
+            };
+            
+            xhr.send(JSON.stringify(dataToSend));
 
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
